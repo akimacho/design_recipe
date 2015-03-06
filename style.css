@@ -1,0 +1,128 @@
+@charset "UTF-8";
+
+@-ms-viewport {
+    width: device-width;
+}
+
+body {
+    margin: 0;
+	font-family: 'メイリオ', 'Hiragino Kaku Gothic Pro', sans-serif;
+}
+
+/* ヘッダー */
+.header	{
+    padding: 20px;
+	background-color: #dfe3e8;
+}
+
+.header h1 {
+    margin: 0;
+	font-size: 25px;
+	line-height: 1;
+}
+
+.header h1 a {
+    color: #000000;
+	text-decoration: none;
+}
+
+.header p {
+    margin: 8px 0 0 0;
+	font-size: 12px;
+	line-height: 1;
+}
+
+/* コンテンツ */
+.content {
+    padding: 15px;
+	background-color: #ffffff;
+}
+
+.content h1	{
+    margin: 0 0 15px 0;
+	font-size: 20px;
+	line-height: 1.2;
+}
+
+.content p {
+    margin: 0 0 15px 0;
+	font-size: 14px;
+	line-height: 1.6;
+}
+
+.content :last-child {
+    margin-bottom: 0
+}
+
+.content td {
+    width: 220px
+}
+
+.content input[type="text"], textarea {
+    width: 100%;
+    height: 32px;
+	padding: 5px 10px 5px 10px;
+	border: solid 1px #aaa;
+	border-radius: 0;
+	background-image: none;
+	font-family: inherit;
+	font-size: 15px;
+	-webkit-appearance: none;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.content textarea {
+    height: 80px;
+}
+
+.content th, td	{
+    padding: 5px;
+	font-size: 14px;
+	text-align: left;
+	vertical-align: top;
+}
+
+/* .contentより小さいまとまり */
+.entry {
+    padding: 18px;
+	background-color: #dfe3e8;
+}
+
+.entry h1 {
+    margin: 0 0 20px 0;
+	font-size: 28px;
+	line-height: 1.2;
+}
+
+.entry p {
+    margin: 0 0 20px 0;
+	font-size: 14px;
+	line-height: 1.6;
+}
+
+/* 枠の設定 */
+.entry {
+    padding: 20px;
+	border: solid 1px #aaa;
+	background-color: #fff;
+}
+
+/* フッター */
+.footer	{
+    padding: 20px;
+	background-color: #dfe3e8;
+}
+
+.footer p {
+    margin: 0 0 3px 0;
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+.footer a {
+    color: #666;
+	text-decoration: none;
+}
+
