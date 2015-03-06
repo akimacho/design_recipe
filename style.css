@@ -32,6 +32,7 @@ body {
 	line-height: 1;
 }
 
+
 /* コンテンツ */
 .content {
     padding: 15px;
@@ -73,8 +74,18 @@ body {
 	box-sizing: border-box;
 }
 
+.content input[type="checkbox"] {
+    width: 25px;
+    height: 25px;
+}
+
 .content textarea {
     height: 80px;
+}
+
+.content select {
+    height: 35px;
+    width: 50px;
 }
 
 .content th, td	{
@@ -83,6 +94,7 @@ body {
 	text-align: left;
 	vertical-align: top;
 }
+
 
 /* .contentより小さいまとまり */
 .entry {

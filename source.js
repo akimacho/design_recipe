@@ -10,6 +10,7 @@ $(function() {
     var info = {
         func_name       : "関数名",// 関数名
         func_obj        : "目的",// 目的
+        func_rec        : false,// 再帰関数かどうかのチェックボックスの状態
         param_num       : 1,// 引数の数
         param_name      : ["引数"],// 関数の引数の名前
         param_type_name : ["型", "型"],// 関数の引数の型名
@@ -37,6 +38,7 @@ $(function() {
     var $container      = $('.content');// コンテンツ
     var $func_name      = $container.find('#name_of_func');// 関数名
     var $func_obj       = $container.find('#obj_of_func');// 関数の目的
+    var $func_rec       = $container.find('#rec');
     var $p_num          = $container.find('#num_of_params');// 引数の数
     var $p_item         = $container.find('#list_of_params');// 引数の項目
     var $p_name         = $container.find('#name_of_params');// 引数の名前
@@ -72,7 +74,7 @@ $(function() {
     /* - 引数の型のフォームを作成する - */
     /* n : 型の名前のフォームの個数 */
     function createTypeNameParams(n) {
-        $p_type.append("<td>その型</td>");
+        $p_type.append("<td>その型 : </td>");
         for (var i = 0; i <= n; i++) {
             // class名 : p_type_in
             $p_type.append("<td><input type=\"text\" class=\"p_type_in\" value=\"型\"></td>");
@@ -135,6 +137,17 @@ $(function() {
         return temp_str;
     }
     
+    /* - 再帰関数ならば文字列"rec"を返す - */
+    /* obj : infoオブジェクト */
+    function createRecFunc(obj) {
+        if (obj.func_rec) {
+            return "rec ";
+        }
+        else {
+            return "";
+        }
+    }
+    
     /* - テストケースの文を作成する - */
     /* obj : info */
     function createTestCaseStr(obj) {
@@ -166,9 +179,9 @@ $(function() {
             "(* 目的 : " + obj.func_obj + " *)" + "\n" + // 関数の目的
             "(* " + obj.func_name + " : " + // 関数の名前
             createParamTypeNameStr(obj.param_type_name) + " *)" + "\n" + // 関数の型
-            "let " + obj.func_name + " " + // 関数の定義
+            "let " + createRecFunc(obj) + obj.func_name + " " + // 関数の定義
             createParamNameStr(obj.param_name) + " = \n" +// 関数の引数
-            " … " + "\n\n" + // 空白&改行
+            "\n\n" + // 空白&改行
             "(* テスト *)" + "\n" + 
             createTestCaseStr(obj) + "\n";// テストケース
         myCM.setValue(temp);
@@ -253,11 +266,25 @@ $(function() {
         }
     });
     
+    // 再帰関数かどうかのチェックボックスがクリックされたら，
+    // info.func_rec をtrueにする
+    $func_rec.click(function() {
+        if ($(this).prop('checked')) {
+            info.func_rec = true;
+        }
+        else {
+            info.func_rec = false;
+        }
+    });
+    
     // ecのDOMに変更があったら，
     $('.ec').on('change', function() {
         setCodeArea(info);
     });
     
+    $('.ec').on('click', function() {
+        setCodeArea(info);
+    });
     
 });
 
