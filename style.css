@@ -75,8 +75,8 @@ body {
 }
 
 .content input[type="checkbox"] {
-    width: 25px;
-    height: 25px;
+    width: 23px;
+    height: 23px;
 }
 
 .content textarea {
@@ -117,7 +117,7 @@ body {
 /* 枠の設定 */
 .entry {
     padding: 20px;
-	border: solid 1px #aaa;
+	border: solid 2px #aaa;
 	background-color: #fff;
 }
 
