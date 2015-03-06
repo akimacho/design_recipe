@@ -197,7 +197,7 @@ $(function() {
             "\n\n" + // 改行
             "(* テスト *)" + "\n" + 
             createTestCaseStr(obj);// テストケース
-        console.log(temp);
+        
         myCM.setValue(temp);
     }
     
@@ -215,11 +215,15 @@ $(function() {
     // 作る関数の名前のフォームが変更されたら，関数の名前を取得する
     $func_name.change(function() {
         info.func_name = $(this).val();
+        
+        setCodeArea(info);
     });
     
     // 作る関数の目的のフォームが変更されたら，関数の目的を取得する
     $func_obj.change(function() {
         info.func_obj = $(this).val();
+        
+        setCodeArea(info);
     });
     
     // 作成する引数の数のオプションが変更されたら，
@@ -239,7 +243,8 @@ $(function() {
         createNameParams(info);
         createTypeNameParams(info);
         createTestItem(info);
-
+        
+        setCodeArea(info);
     });
 
     // テストケースのオプションが変更されたら，
@@ -248,6 +253,8 @@ $(function() {
         $test_box.empty();
         info.test_num = Number($(this).val());
         createTestItem(info);
+        
+        setCodeArea(info);
     });
     
     // 作成する関数の引数の名前が変更されたら，
@@ -257,6 +264,8 @@ $(function() {
         for (var i = 0; i < $pn_in.length; i++) {
             info.param_name[i] = $pn_in.eq(i).val();
         }
+        
+        setCodeArea(info);
     });
     
     // 作成する関数の引数の型が変更されたら，
@@ -266,6 +275,8 @@ $(function() {
         for (var i = 0; i < $pt_in.length; i++) {
             info.param_type_name[i] = $pt_in.eq(i).val();
         }
+        
+        setCodeArea(info);
     });
     
     // テストケースに入力があったら，
@@ -281,6 +292,8 @@ $(function() {
                 info.test_val[i] = $tb_in.eq(i).val();
             }
         }
+        
+        setCodeArea(info);
     });
     
     // 再帰関数かどうかのチェックボックスがクリックされたら，
@@ -292,13 +305,10 @@ $(function() {
         else {
             info.func_rec = false;
         }
+        
         setCodeArea(info);
     });
     
-    // ecのDOMに変更があったら，
-    $('.ec').on('change', function() {
-        setCodeArea(info);
-    });
     
 });
 
