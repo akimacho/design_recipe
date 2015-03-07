@@ -32,7 +32,6 @@ $(function() {
             mode  : "mllike",// OCamlなどのML系言語
             theme : "solarized", // カラーリングテーマ
             lineNumbers : true,// 行番号を表示する
-            tabSize : 4,//タブサイズ
         }
     );
     
@@ -156,11 +155,12 @@ $(function() {
     function createParamNameStr(obj) {
         var temp_str = "";
         for (var i = 0; i < obj.param_num; i++) {
-            if (obj.param_name[i] == "" || obj.param_name[i] == undefined) {
+            var t_name = obj.param_name[i];
+            if (t_name == "" || t_name == undefined) {
                 temp_str += "引数" + " ";
             }
             else {
-                temp_str += obj.param_name[i] + " ";
+                temp_str += t_name + " ";
             }
         }
         
@@ -172,10 +172,11 @@ $(function() {
     /* 戻り値 : 文字列 */
     function createParamTypeNameStr(obj) {
         var temp_str = "";
-        for (var i = 0; i < obj.param_type_name.length - 1; i++) {
+        var len = obj.param_type_name.length - 1;
+        for (var i = 0; i < len; i++) {
             temp_str += obj.param_type_name[i] + " -> ";
         }
-        temp_str += obj.param_type_name[obj.param_type_name.length - 1];
+        temp_str += obj.param_type_name[len];
         
         return temp_str;
     }
@@ -228,21 +229,13 @@ $(function() {
     /* - コードの内容を設定する - */
     /* obj : info */
     function setCodeArea(obj) {
-        //obj.prev_code = myCM.getValue();
-        //console.log(obj.prev_code);
-        //var up = obj.prev_code.match(/ = ((.|\s)*)\s\(\* テスト \*\)/);
-        //console.log(up);
-        //if (up != null) {
-        //    console.log(up[1]);
-        //}
-        
         var code_str = 
             "(* 目的 : " + obj.func_obj + " *)" + "\n" + // 関数の目的
             "(* " + obj.func_name + " : " + // 関数の名前
             createParamTypeNameStr(obj) + " *)" + "\n" + // 関数の型
             "let " + createRecFunc(obj) + obj.func_name + " " + // 関数の定義
-            createParamNameStr(obj) + " = \n" +// 関数の引数
-            "\n" + // 改行
+            createParamNameStr(obj) + " = " +// 関数の引数
+            "\n\n" + // 改行
             "(* テスト *)" + "\n" + 
             createTestCaseStr(obj);// テストケース
         
@@ -284,7 +277,6 @@ $(function() {
     // テストケースのオプションが変更されたら，
     // テストケースの入力フォームを作成する
     $test_num.change(function() {
-        //$test_box.empty();
         info.test_num = Number($(this).val());
         createTestItem(info);
         
@@ -319,11 +311,12 @@ $(function() {
         var $tb_in = $(this).find('input');
         for (var i = 0; i < $tb_in.length; i++) {
             // info.test_val[]に格納する値は文字列
-            if ($tb_in.eq(i).val() === "" || $tb_in.eq(i).val() === undefined) {
+            var t_val = $tb_in.eq(i).val();
+            if (t_val === "" || t_val === undefined) {
                 info.test_val[i] = "値";
             }
             else {
-                info.test_val[i] = $tb_in.eq(i).val();
+                info.test_val[i] = t_val;
             }
         }
         

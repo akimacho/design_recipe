@@ -15,9 +15,3 @@ OCamlの関数プロトタイプとテストを作成します
 ## Author
 
 [akimacho](https://github.com/akimacho)
-
-ただし，本プログラムで利用しているCodeMirrorのCopyrightは
-
-[Marijn Haverbeke](https://github.com/marijnh)
-
-です．

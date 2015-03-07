@@ -84,6 +84,13 @@ body {
 }
 
 .content select {
+    font-size: 20px;
+    height: 35px;
+    width: 50px;
+}
+
+.content option {
+    font-size: 20px;
     height: 35px;
     width: 50px;
 }
