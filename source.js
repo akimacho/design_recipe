@@ -50,12 +50,14 @@ $(function() {
     var $test_num       = $container.find('#num_of_test');// テストの数
     var $test_box       = $container.find('#test_box');// テストの項
     var $editor_ocaml   = $container.find('#editor_ocaml');// コードエリア
-    var $dump           = $container.find('#dump');
     
     /* - フォームを作成する関数 - */
     /* 引数の項を作成する */
     /* n : パラメータの個数 */
+    /* JQueryオブジェクトを利用する */
+    /* 戻り値なし */
     function createListParams(obj) {
+        $p_item.empty();
         $p_item.append("<td></td>");
         for (var i = 0; i < obj.param_num; i++) {
             $p_item.append("<td>第" + String(i + 1) + "引数</td>")
@@ -66,10 +68,20 @@ $(function() {
     /* - 引数の名前のフォームを作成する - */
     /* 戻り値の型はいらない */
     /* n : パラメータのフォームの個数 */
+    /* 戻り値なし */
     function createNameParams(obj) {
+        $p_name.empty();
         $p_name.append("<td>名前 : </td>")
         for (var i = 0; i < obj.param_num; i++) {
-            $p_name.append("<td><input type=\"text\" value=\"引数\"></td>");
+            $p_name.append("<td><input type=\"text\" value="
+                            + (function (pn, index) {
+                                if (pn[index] == "" || pn[index] == undefined) {
+                                    return "引数";
+                                }
+                                else {
+                                    return pn[index];
+                                }
+                            })(obj.param_name, i) + "></td>");
         }
         $p_name.append("<td></td>");
     }
@@ -78,10 +90,19 @@ $(function() {
     /* n : 型の名前のフォームの個数 */
     /* 戻り値なし */
     function createTypeNameParams(obj) {
+        $p_type.empty();
         $p_type.append("<td>その型 : </td>");
         for (var i = 0; i <= obj.param_num; i++) {
             // class名 : p_type_in
-            $p_type.append("<td><input type=\"text\" class=\"p_type_in\" value=\"型\"></td>");
+            $p_type.append("<td><input type=\"text\" class=\"p_type_in\" value="
+                            + (function (pt, index) {
+                                if (pt[index] == "" || pt[index] == undefined) {
+                                    return "型";
+                                }
+                                else {
+                                    return pt[index];
+                                }
+                            })(obj.param_type_name, i) + "></td>");
         }
     }
     
@@ -91,6 +112,7 @@ $(function() {
     /* obj.param_num : 作成する引数の個数*/
     /* 戻り値なし */
     function createTestItem(obj) {
+        $test_box.empty();
         for (var i = 0; i <= obj.test_num; i++) {
             $test_box.append("<tr></tr>");
         }
@@ -98,6 +120,7 @@ $(function() {
         
         for (var i = 0; i <= obj.test_num; i++) {
             if (i === 0) {
+                // 一番上の見出し項目の作成
                 for (var j = 0; j <= obj.param_num; j++) {
                     if (j === 0) {
                         $temp.eq(i).append("<td></td>");
@@ -106,6 +129,7 @@ $(function() {
                         $temp.eq(i).append("<td>第" + String(j) + "引数の値</td>");
                     }
                 }
+                // "第N引数の値"の項目の後に追加する項目
                 $temp.eq(i).append("<td>期待される結果</td>");
             }
             else {
@@ -114,10 +138,26 @@ $(function() {
                         $temp.eq(i).append("<td>テスト" + String(i) + "</td>");
                     }
                     else {
-                        $temp.eq(i).append("<td><input type=\"text\" value=\"値\"></td>");
+                        $temp.eq(i).append("<td><input type=\"text\" value=" +
+                        (function (pt, index) {
+                                if (pt[index] == "" || pt[index] == undefined) {
+                                    return "値";
+                                }
+                                else {
+                                    return pt[index];
+                                }
+                        })(obj.test_val, i) + "></td>");
                     }
                 }
-                $temp.eq(i).append('<td><input type="text" value=\"値\"></td>');
+                $temp.eq(i).append("<td><input type=\"text\" value=" + 
+                (function (pt, index) {
+                    if (pt[index] == "" || pt[index] == undefined) {
+                        return "値";
+                    }
+                    else {
+                        return pt[index];
+                    }
+                })(obj.test_val, i) + "></td>");
             }
         }
     }
@@ -127,8 +167,13 @@ $(function() {
     /* 戻り値 : 文字列 */
     function createParamNameStr(obj) {
         var temp_str = "";
-        for (var i = 0; i < obj.param_name.length; i++) {
-            temp_str += obj.param_name[i];
+        for (var i = 0; i < obj.param_num; i++) {
+            if (obj.param_name[i] == "" || obj.param_name[i] == undefined) {
+                temp_str += "引数" + " ";
+            }
+            else {
+                temp_str += obj.param_name[i] + " ";
+            }
         }
         
         return temp_str;
@@ -165,9 +210,10 @@ $(function() {
     function createTestCaseStr(obj) {
         var temp_str = "";
         var tn = Number(obj.test_num);
-        var pn = Number(obj.param_num + 1);
-        var len = obj.test_val.length; // テストのフォーム数
-
+        var pn = Number(obj.param_num + 1);// 引数の個数 + 戻り値の個数
+        //var len = obj.test_val.length; // テストのフォーム数
+        // var len = 
+        
         for (var i = 0; i < tn * pn; i++) {
             if (obj.test_val[i] == "" || obj.test_val[i] == undefined) {
                 obj.test_val[i] = "値";
@@ -194,13 +240,11 @@ $(function() {
             createParamTypeNameStr(obj) + " *)" + "\n" + // 関数の型
             "let " + createRecFunc(obj) + obj.func_name + " " + // 関数の定義
             createParamNameStr(obj) + " = \n" +// 関数の引数
-            "\n\n" + // 改行
+            "\n" + // 改行
             "(* テスト *)" + "\n" + 
             createTestCaseStr(obj);// テストケース
-        
         myCM.setValue(temp);
     }
-    
     
     /* === 初期化 === */
     createListParams(info);// 作成する関数の引数は1つ
@@ -232,12 +276,6 @@ $(function() {
         // 作成する関数の引数を取得する
         info.param_num = Number($(this).val());
         
-        // 各DOMの子要素を一度空にする
-        $p_item.empty();
-        $p_name.empty();
-        $p_type.empty();
-        $test_box.empty();
-        
         // 各項を作成する
         createListParams(info);
         createNameParams(info);
@@ -250,7 +288,7 @@ $(function() {
     // テストケースのオプションが変更されたら，
     // テストケースの入力フォームを作成する
     $test_num.change(function() {
-        $test_box.empty();
+        //$test_box.empty();
         info.test_num = Number($(this).val());
         createTestItem(info);
         
@@ -261,7 +299,7 @@ $(function() {
     // その値を配列info.param_nameに格納する
     $p_name.change(function() {
         var $pn_in = $(this).find('input');
-        for (var i = 0; i < $pn_in.length; i++) {
+        for (var i = 0; i < info.param_num; i++) {
             info.param_name[i] = $pn_in.eq(i).val();
         }
         
@@ -285,7 +323,7 @@ $(function() {
         var $tb_in = $(this).find('input');
         for (var i = 0; i < $tb_in.length; i++) {
             // info.test_val[]に格納する値は文字列
-            if ($tb_in.eq(i).val() == "" || $tb_in.eq(i).val() == undefined) {
+            if ($tb_in.eq(i).val() === "" || $tb_in.eq(i).val() === undefined) {
                 info.test_val[i] = "値";
             }
             else {
