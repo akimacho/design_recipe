@@ -17,7 +17,7 @@ body {
 
 .header h1 {
     margin: 0;
-	font-size: 25px;
+	font-size: 35px;
 	line-height: 1;
 }
 
@@ -28,7 +28,7 @@ body {
 
 .header p {
     margin: 8px 0 0 0;
-	font-size: 12px;
+	font-size: 16px;
 	line-height: 1;
 }
 
@@ -41,13 +41,13 @@ body {
 
 .content h1	{
     margin: 0 0 15px 0;
-	font-size: 20px;
+	font-size: 25px;
 	line-height: 1.2;
 }
 
 .content p {
     margin: 0 0 15px 0;
-	font-size: 15px;
+	font-size: 18px;
 	line-height: 1.6;
 }
 
@@ -67,7 +67,7 @@ body {
 	border-radius: 0;
 	background-image: none;
 	font-family: inherit;
-	font-size: 15px;
+	font-size: 20px;
 	-webkit-appearance: none;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -90,7 +90,7 @@ body {
 
 .content th, td	{
     padding: 5px;
-	font-size: 14px;
+	font-size: 20px;
 	text-align: left;
 	vertical-align: top;
 }
@@ -138,3 +138,9 @@ body {
 	text-decoration: none;
 }
 
+/* CodeMirror */
+.CodeMirror {
+    font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+    font-size: 14pt;
+    height: 100%;
+}

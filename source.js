@@ -19,6 +19,7 @@ $(function() {
         test_val        : ["値", "値",
                             "値", "値",
                             "値", "値"],// テストの値（文字列）
+        prev_code       : "",// 変更前のコード
     };
     
     
@@ -31,13 +32,13 @@ $(function() {
             mode  : "mllike",// OCamlなどのML系言語
             theme : "solarized", // カラーリングテーマ
             lineNumbers : true,// 行番号を表示する
-            tabSize : 2,//タブサイズ
+            tabSize : 4,//タブサイズ
         }
     );
     
     
     /* === 要素の取得 === */
-    
+
     var $container      = $('.content');// コンテンツ
     var $func_name      = $container.find('#name_of_func');// 関数名
     var $func_obj       = $container.find('#obj_of_func');// 関数の目的
@@ -45,11 +46,16 @@ $(function() {
     var $p_num          = $container.find('#num_of_params');// 引数の数
     var $p_item         = $container.find('#list_of_params');// 引数の項目
     var $p_name         = $container.find('#name_of_params');// 引数の名前
-    var $p_name_in      = $container.find('#name_of_params input');
     var $p_type         = $container.find('#type_name_params');// 引数の型名
     var $test_num       = $container.find('#num_of_test');// テストの数
     var $test_box       = $container.find('#test_box');// テストの項
-    var $editor_ocaml   = $container.find('#editor_ocaml');// コードエリア
+    
+    /* === 初期化 === */
+    createListParams(info);// 作成する関数の引数は1つ
+    createNameParams(info);// 作成する関数の引数名は1つ
+    createTypeNameParams(info);// 作成する関数の引数の型は1つ
+    createTestItem(info);// 作成する関数のテストの数は$test_num.val()個
+    setCodeArea(info);
     
     /* - フォームを作成する関数 - */
     /* 引数の項を作成する */
@@ -93,8 +99,7 @@ $(function() {
         $p_type.empty();
         $p_type.append("<td>その型 : </td>");
         for (var i = 0; i <= obj.param_num; i++) {
-            // class名 : p_type_in
-            $p_type.append("<td><input type=\"text\" class=\"p_type_in\" value="
+            $p_type.append("<td><input type=\"text\" value="
                             + (function (pt, index) {
                                 if (pt[index] == "" || pt[index] == undefined) {
                                     return "型";
@@ -116,13 +121,12 @@ $(function() {
         for (var i = 0; i <= obj.test_num; i++) {
             $test_box.append("<tr></tr>");
         }
-        var $temp = $('#test_box tr');
-        
+        var $temp = $test_box.find('tr');
         for (var i = 0; i <= obj.test_num; i++) {
-            if (i === 0) {
+            if (i == 0) {
                 // 一番上の見出し項目の作成
                 for (var j = 0; j <= obj.param_num; j++) {
-                    if (j === 0) {
+                    if (j == 0) {
                         $temp.eq(i).append("<td></td>");
                     }
                     else {
@@ -138,26 +142,10 @@ $(function() {
                         $temp.eq(i).append("<td>テスト" + String(i) + "</td>");
                     }
                     else {
-                        $temp.eq(i).append("<td><input type=\"text\" value=" +
-                        (function (pt, index) {
-                                if (pt[index] == "" || pt[index] == undefined) {
-                                    return "値";
-                                }
-                                else {
-                                    return pt[index];
-                                }
-                        })(obj.test_val, i) + "></td>");
+                        $temp.eq(i).append("<td><input type=\"text\" value=\"値\"></td>");
                     }
                 }
-                $temp.eq(i).append("<td><input type=\"text\" value=" + 
-                (function (pt, index) {
-                    if (pt[index] == "" || pt[index] == undefined) {
-                        return "値";
-                    }
-                    else {
-                        return pt[index];
-                    }
-                })(obj.test_val, i) + "></td>");
+                $temp.eq(i).append("<td><input type=\"text\" value=\"値\"></td>");
             }
         }
     }
@@ -211,21 +199,27 @@ $(function() {
         var temp_str = "";
         var tn = Number(obj.test_num);
         var pn = Number(obj.param_num + 1);// 引数の個数 + 戻り値の個数
-        //var len = obj.test_val.length; // テストのフォーム数
-        // var len = 
-        
-        for (var i = 0; i < tn * pn; i++) {
-            if (obj.test_val[i] == "" || obj.test_val[i] == undefined) {
-                obj.test_val[i] = "値";
-            }
-        }
 
         for (var i = 0; i < tn; i++) {
             temp_str += "let test" + (i + 1) + " = " + obj.func_name + " ";
             for (var j = 0; j < pn - 1; j++) {
-                temp_str += obj.test_val[pn * i + j] + " ";
+                var temp_index = pn * i + j;
+                if (obj.test_val[temp_index] == ""
+                    || obj.test_val[temp_index] == undefined) {
+                    temp_str += "値 ";
+                }
+                else {
+                    temp_str += obj.test_val[temp_index] + " ";
+                }
             }
-            temp_str += " = " + obj.test_val[pn * i + (pn - 1)] + "\n";
+            var temp_index = pn * i + (pn - 1);
+            if (obj.test_val[temp_index] == ""
+                || obj.test_val[temp_index] == undefined) {
+                temp_str += " = 値\n";
+            }
+            else {
+                temp_str += " = " + obj.test_val[temp_index] + "\n";
+            }
         }
         
         return temp_str;
@@ -234,7 +228,15 @@ $(function() {
     /* - コードの内容を設定する - */
     /* obj : info */
     function setCodeArea(obj) {
-        var temp = 
+        //obj.prev_code = myCM.getValue();
+        //console.log(obj.prev_code);
+        //var up = obj.prev_code.match(/ = ((.|\s)*)\s\(\* テスト \*\)/);
+        //console.log(up);
+        //if (up != null) {
+        //    console.log(up[1]);
+        //}
+        
+        var code_str = 
             "(* 目的 : " + obj.func_obj + " *)" + "\n" + // 関数の目的
             "(* " + obj.func_name + " : " + // 関数の名前
             createParamTypeNameStr(obj) + " *)" + "\n" + // 関数の型
@@ -243,15 +245,9 @@ $(function() {
             "\n" + // 改行
             "(* テスト *)" + "\n" + 
             createTestCaseStr(obj);// テストケース
-        myCM.setValue(temp);
+        
+        myCM.setValue(code_str);
     }
-    
-    /* === 初期化 === */
-    createListParams(info);// 作成する関数の引数は1つ
-    createNameParams(info);// 作成する関数の引数名は1つ
-    createTypeNameParams(info);// 作成する関数の引数の型は1つ
-    createTestItem(info);// 作成する関数のテストの数は$test_num.val()個
-    setCodeArea(info);
     
     
     /* === イベントハンドラ === */
