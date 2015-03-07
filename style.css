@@ -140,7 +140,7 @@ body {
 
 /* CodeMirror */
 .CodeMirror {
-    font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
-    font-size: 14pt;
+    font-family: 'メイリオ', 'Hiragino Kaku Gothic Pro', sans-serif;
+    font-size: 15pt;
     height: 100%;
 }
